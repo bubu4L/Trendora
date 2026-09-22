@@ -32,7 +32,7 @@ function useReveal() {
           }
         });
       },
-      { threshold: 0.12 },
+      { threshold: 0.12 }
     );
     items.forEach((item) => observer.observe(item));
     return () => observer.disconnect();
@@ -42,6 +42,8 @@ function useReveal() {
 function Layout({ children, cartCount, onCart, user, onLogout }) {
   const location = useLocation();
   const [menu, setMenu] = useState(false);
+
+  const closeMenu = () => setMenu(false);
 
   // FIX: braces so the effect never returns scrollTo's result to React.
   // Also handles /#categories and /#story links without a full page reload.
@@ -57,6 +59,11 @@ function Layout({ children, cartCount, onCart, user, onLogout }) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [location.pathname, location.hash]);
 
+  // Close mobile menu whenever location changes
+  useEffect(() => {
+    setMenu(false);
+  }, [location.pathname, location.hash]);
+
   return (
     <>
       <div className="announcement">
@@ -67,7 +74,7 @@ function Layout({ children, cartCount, onCart, user, onLogout }) {
       </div>
       <nav className="navbar navbar-expand-lg trendora-nav sticky-top">
         <div className="container">
-          <Link className="navbar-brand brand" to="/">
+          <Link className="navbar-brand brand" to="/" onClick={closeMenu}>
             trendora<span>.</span>
           </Link>
           <button
@@ -80,22 +87,22 @@ function Layout({ children, cartCount, onCart, user, onLogout }) {
           <div className={`navbar-collapse ${menu ? "show" : ""}`}>
             <ul className="navbar-nav mx-auto gap-lg-4">
               <li>
-                <Link className="nav-link" to="/">
+                <Link className="nav-link" to="/" onClick={closeMenu}>
                   Home
                 </Link>
               </li>
               <li>
-                <Link className="nav-link" to="/shop">
+                <Link className="nav-link" to="/shop" onClick={closeMenu}>
                   Shop
                 </Link>
               </li>
               <li>
-                <Link className="nav-link" to="/#categories">
+                <Link className="nav-link" to="/#categories" onClick={closeMenu}>
                   Categories
                 </Link>
               </li>
               <li>
-                <Link className="nav-link" to="/#story">
+                <Link className="nav-link" to="/#story" onClick={closeMenu}>
                   Our Story
                 </Link>
               </li>
@@ -113,17 +120,34 @@ function Layout({ children, cartCount, onCart, user, onLogout }) {
 
                   <span className="user-name">{user.name}</span>
 
-                  <button className="logout-btn" onClick={onLogout}>
+                  <button
+                    className="logout-btn"
+                    onClick={() => {
+                      closeMenu();
+                      onLogout();
+                    }}
+                  >
                     Logout
                   </button>
                 </div>
               ) : (
-                <Link to="/login" className="icon-btn" title="Login">
+                <Link
+                  to="/login"
+                  className="icon-btn"
+                  title="Login"
+                  onClick={closeMenu}
+                >
                   <i className="bi bi-person"></i>
                 </Link>
               )}
 
-              <button className="icon-btn cart-btn" onClick={onCart}>
+              <button
+                className="icon-btn cart-btn"
+                onClick={() => {
+                  closeMenu();
+                  onCart();
+                }}
+              >
                 <i className="bi bi-bag"></i>
                 <span>{cartCount}</span>
               </button>
@@ -404,11 +428,10 @@ function Shop({ onAdd }) {
   const [searchParams] = useSearchParams();
   const [products, setProducts] = useState(fallbackProducts);
   const [category, setCategory] = useState(
-    searchParams.get("category") || "All",
+    searchParams.get("category") || "All"
   );
   const [search, setSearch] = useState("");
 
-  // FIX: the category cards on Home link to /shop?category=..., so read it here.
   useEffect(() => {
     setCategory(searchParams.get("category") || "All");
   }, [searchParams]);
@@ -431,9 +454,9 @@ function Shop({ onAdd }) {
       products.filter(
         (p) =>
           (category === "All" || p.category === category) &&
-          p.name.toLowerCase().includes(search.toLowerCase()),
+          p.name.toLowerCase().includes(search.toLowerCase())
       ),
-    [products, category, search],
+    [products, category, search]
   );
 
   return (
@@ -500,7 +523,6 @@ function Checkout({ cart, onComplete }) {
   const [error, setError] = useState("");
   const total = cart.reduce((sum, p) => sum + p.price, 0);
 
-  // FIX: only clear the cart and show the success page if the order actually succeeded.
   async function submit(e) {
     e.preventDefault();
     setLoading(true);
@@ -651,7 +673,6 @@ function App() {
     navigate("/");
   }
 
-  // FIX: toast timer now lives in an effect with cleanup, so quick repeated adds don't clear each other early.
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(""), 2200);
