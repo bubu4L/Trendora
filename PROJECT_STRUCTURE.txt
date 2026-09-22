@@ -1,0 +1,21 @@
+Trendora/
+├── client/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── api.js
+│   │   ├── data.js
+│   │   ├── main.jsx
+│   │   └── styles.css
+│   ├── index.html
+│   └── package.json
+├── server/
+│   ├── src/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── seed.js
+│   │   └── server.js
+│   ├── .env.example
+│   └── package.json
+├── package.json
+├── README.md
+└── .gitignore
