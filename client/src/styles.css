@@ -886,9 +886,6 @@ h2 em {
 ========================= */
 
 @media (max-width: 991px) {
-  .navbar-collapse {
-    padding: 15px 0 20px;
-  }
   .nav-link {
     padding: 8px 0 !important;
   }
@@ -978,5 +975,38 @@ h2 em {
   .footer-bottom span {
     display: block;
     margin-bottom: 7px;
+  }
+}
+
+/* SLIDE DOWN & SLIDE UP ANIMATION FOR MOBILE NAV */
+@media (max-width: 991.98px) {
+  .trendora-nav .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    padding: 0 1.5rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid #eaeaea;
+    z-index: 1050;
+    overflow: hidden;
+
+    /* Initial closed state: 0 height */
+    max-height: 0;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+  }
+
+  /* Override Bootstrap's display:none so height transitions work */
+  .trendora-nav .navbar-collapse:not(.show) {
+    display: block !important;
+  }
+
+  /* Expanded open state */
+  .trendora-nav .navbar-collapse.show {
+    display: block !important;
+    max-height: 450px; /* Adjust if your menu content is taller */
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
   }
 }

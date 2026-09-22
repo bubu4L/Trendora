@@ -45,8 +45,6 @@ function Layout({ children, cartCount, onCart, user, onLogout }) {
 
   const closeMenu = () => setMenu(false);
 
-  // FIX: braces so the effect never returns scrollTo's result to React.
-  // Also handles /#categories and /#story links without a full page reload.
   useEffect(() => {
     if (location.hash) {
       const id = location.hash.slice(1);
@@ -72,48 +70,50 @@ function Layout({ children, cartCount, onCart, user, onLogout }) {
           energy.
         </div>
       </div>
-      <nav className="navbar navbar-expand-lg trendora-nav sticky-top">
+      <nav className="navbar navbar-expand-lg trendora-nav sticky-top position-relative">
         <div className="container">
           <Link className="navbar-brand brand" to="/" onClick={closeMenu}>
             trendora<span>.</span>
           </Link>
           <button
-            className="navbar-toggler"
+            className="navbar-toggler border-0 shadow-none"
             onClick={() => setMenu(!menu)}
             aria-label="Toggle navigation"
           >
-            <i className={`bi ${menu ? "bi-x-lg" : "bi-list"}`}></i>
+            <i className={`bi ${menu ? "bi-x-lg" : "bi-list"} fs-2`}></i>
           </button>
+          
+          {/* Mobile Absolute Dropdown / Desktop Standard Collapsible Nav */}
           <div className={`navbar-collapse ${menu ? "show" : ""}`}>
             <ul className="navbar-nav mx-auto gap-lg-4">
-              <li>
+              <li className="nav-item">
                 <Link className="nav-link" to="/" onClick={closeMenu}>
                   Home
                 </Link>
               </li>
-              <li>
+              <li className="nav-item">
                 <Link className="nav-link" to="/shop" onClick={closeMenu}>
                   Shop
                 </Link>
               </li>
-              <li>
+              <li className="nav-item">
                 <Link className="nav-link" to="/#categories" onClick={closeMenu}>
                   Categories
                 </Link>
               </li>
-              <li>
+              <li className="nav-item">
                 <Link className="nav-link" to="/#story" onClick={closeMenu}>
                   Our Story
                 </Link>
               </li>
             </ul>
-            <div className="nav-actions">
+            <div className="nav-actions d-flex align-items-center gap-3 mt-3 mt-lg-0">
               <button className="icon-btn">
                 <i className="bi bi-search"></i>
               </button>
 
               {user ? (
-                <div className="user-menu">
+                <div className="user-menu d-flex align-items-center gap-2">
                   <button className="icon-btn">
                     <i className="bi bi-person-fill"></i>
                   </button>
